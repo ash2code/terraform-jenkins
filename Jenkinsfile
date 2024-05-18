@@ -9,33 +9,33 @@ pipeline {
 
     stages{
         stage("checkout-code") {
-            step {
+            steps {
             git branch: 'main', url: 'https://github.com/ash2code/terraform-jenkins.git'
             }
         }
         stage("terraform init") {
-            step {
+            steps {
                 script {
                     sh "terraform init"
                 }
             }
         }
         stage("terraform plan") {
-            step {
+            steps {
                 script {
                     sh "terraform plan"
                 }
             }
         }
         stage("terraform-apply") {
-            step {
+            steps {
                 script {
                     sh "terraform apply --auto-approve"
                 }
             }
         }
         stage("terraform-destroy") {
-            step {
+            steps {
                 script {
                     if (env.TERRAFORM_DESTROY == 'yes') {
                         sh "terraform destroy --auto-approve"
