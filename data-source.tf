@@ -3,5 +3,5 @@ data "aws_instance" "myawsinstance" {
       name = "tag:Name"
       values = ["${local.resource_name}-ec2"]
     }
-    depends_on = [ "aws_ec2.aws-ec2" ]
+    depends_on = [ "aws_instance.aws-ec2" ]
 }
