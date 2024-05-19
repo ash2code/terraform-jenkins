@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     if (env.TERRAFORM_DESTROY == 'yes') {
-                        sh "terraform destroy --auto-approve"
+                        sh "terraform destroy -input=false --auto-approve"
                     }
                     else {
                         echo "terraform is not destroyed"
