@@ -16,21 +16,21 @@ pipeline {
         stage("terraform init") {
             steps {
                 script {
-                    sh "terraform init"
+                    sh "terraform init -input=false -force-copy"
                 }
             }
         }
         stage("terraform plan") {
             steps {
                 script {
-                    sh "terraform plan"
+                    sh "terraform plan -input=false"
                 }
             }
         }
         stage("terraform-apply") {
             steps {
                 script {
-                    sh "terraform apply --auto-approve"
+                    sh "terraform apply --auto-approve -input=false"
                 }
             }
         }
