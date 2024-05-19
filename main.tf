@@ -20,7 +20,7 @@ resource "aws_internet_gateway_attachment" "aws-igw-attachment" {
 
 resource "aws_subnet" "aws-subnet" {
     vpc_id = aws_vpc.aws-vpc.id
-    count = var.environment == "dev" ? 1:3
+    count = var.environment == "dev" ? 3:1
     cidr_block = element(var.public_subnet_cidr_list,count.index)
     map_public_ip_on_launch = true
     availability_zone = var.availability_zone
@@ -41,7 +41,8 @@ resource "aws_route_table" "aws-route-table" {
 }
 
 resource "aws_route_table_association" "aws-route-table-association" {
-    subnet_id = aws_subnet.aws-subnet.id
+    count = var.environment == "dev" ? 3:1
+    subnet_id = aws_subnet.aws-subnet[count.index].id
     route_table_id = aws_route_table.aws-route-table.id
 }
 
@@ -96,7 +97,7 @@ resource "aws_network_acl" "aws-network-acl" {
     }
 }
 
-resource "aws_ec2" "aws-ec2" {
+resource "aws_instance" "aws-ec2" {
     ami = var.ami
     instance_type = var.instance_type
     subnet_id = aws_subnet.aws-subnet.id
@@ -126,7 +127,7 @@ resource "aws_s3_bucket" "aws-s3-bucket" {
 
 resource "aws_s3_account_public_access_block" "aws-s3-pub-access" {
 
-    bucket = aws_s3_bucket.aws-s3-bucket.bucket
+    bucket = aws_s3_bucket.aws-s3-bucket.id
 
     block_public_acls = true
     block_public_policy = true
@@ -135,7 +136,7 @@ resource "aws_s3_account_public_access_block" "aws-s3-pub-access" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "aws-object-ownership" {
-    bucket = aws_s3_bucket.aws-s3-bucket.bucket
+    bucket = aws_s3_bucket.aws-s3-bucket.id
 
     rule {
         object_ownership = "ObjectWriter"
