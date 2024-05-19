@@ -1,7 +1,7 @@
 resource "aws_vpc" "aws-vpc" {
     cidr_block = var.vpc_cidr_block
   tags = {
-    Name = "${local.env}-vpc"
+    Name = "${local.resource_name}-vpc"
   }
 }
 
@@ -9,7 +9,7 @@ resource "aws_internet_gateway" "aws-igw" {
     vpc_id = aws_vpc.aws-vpc.id
 
     tags = {
-        Name = "${local.env}-igw"
+        Name = "${local.resource_name}-igw"
     }
 }
 
@@ -20,11 +20,12 @@ resource "aws_internet_gateway_attachment" "aws-igw-attachment" {
 
 resource "aws_subnet" "aws-subnet" {
     vpc_id = aws_vpc.aws-vpc.id
-    cidr_block = var.subnet_cidr_block
+    count = var.environment == "dev" ? 1:3
+    cidr_block = element(var.public_subnet_cidr_list,count.index)
     map_public_ip_on_launch = true
     availability_zone = var.availability_zone
     tags = {
-        Name = "${local.env}-subnet"
+        Name = "${local.resource_name}-subnet-${count.index + 1}"
     }
 }
 
@@ -35,7 +36,7 @@ resource "aws_route_table" "aws-route-table" {
         gateway_id = aws_internet_gateway.aws-igw.id
     }
     tags = {
-        Name = "${local.env}-route-table"
+        Name = "${local.resource_name}-route-table"
     }
 }
 
@@ -46,7 +47,7 @@ resource "aws_route_table_association" "aws-route-table-association" {
 
 resource "aws_security_group" "aws-security-group" {
     vpc_id = aws_vpc.aws-vpc.id
-    name = "${local.env}-security-group"
+    name = "${local.resource_name}-security-group"
     description = "Allow SSH inbound traffic"
     ingress {
         from_port = 22
@@ -67,7 +68,7 @@ resource "aws_security_group" "aws-security-group" {
         cidr_blocks = var.egress_cidr_blocks
     }
     tags = {
-        Name = "${local.env}-security-group"
+        Name = "${local.resource_name}-security-group"
     }
 }
 
@@ -91,7 +92,7 @@ resource "aws_network_acl" "aws-network-acl" {
         to_port = 0
     }
     tags = {
-        Name = "${local.env}-network-acl"
+        Name = "${local.resource_name}-network-acl"
     }
 }
 
@@ -101,7 +102,8 @@ resource "aws_ec2" "aws-ec2" {
     subnet_id = aws_subnet.aws-subnet.id
     vpc_security_group_ids = [aws_security_group.aws-security-group.id]
     tags = {
-        Name = "${local.env}-ec2"
+        Name = "${local.resource_name}-ec2"
+        env = upper("dev")
     }
     user_data = <<-EOF
               #!/bin/bash
@@ -118,7 +120,7 @@ resource "aws_s3_bucket" "aws-s3-bucket" {
     bucket = var.bucket_name
     
     tags = {
-        Name = "${local.env}-s3-bucket"
+        Name = "${local.resource_name}-s3-bucket"
     }
 }
 
