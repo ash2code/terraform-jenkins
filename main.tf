@@ -99,13 +99,14 @@ resource "aws_network_acl" "aws-network-acl" {
 }
 
 resource "aws_instance" "aws-ec2" {
+    count = var.environment == "dev" ? 3:1
     ami = var.ami
     instance_type = var.instance_type
-    subnet_id = aws_subnet.aws-subnet.id
+    subnet_id = aws_subnet.aws-subnet[count.index].id
     vpc_security_group_ids = [aws_security_group.aws-security-group.id]
     tags = {
-        Name = "${local.resource_name}-ec2"
-        env = upper("dev")
+        Name = "${local.resource_name}-ec2-${count.index + 1}"
+        env = upper(var.environment)
     }
     user_data = <<-EOF
               #!/bin/bash
