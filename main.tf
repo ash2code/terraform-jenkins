@@ -13,10 +13,10 @@ resource "aws_internet_gateway" "aws-igw" {
     }
 }
 
-resource "aws_internet_gateway_attachment" "aws-igw-attachment" {
-    internet_gateway_id = aws_internet_gateway.aws-igw.id
-    vpc_id = aws_vpc.aws-vpc.id
-}
+# resource "aws_internet_gateway_attachment" "aws-igw-attachment" {
+#     internet_gateway_id = aws_internet_gateway.aws-igw.id
+#     vpc_id = aws_vpc.aws-vpc.id
+# }
 
 resource "aws_subnet" "aws-subnet" {
     vpc_id = aws_vpc.aws-vpc.id
