@@ -103,6 +103,7 @@ resource "aws_ec2" "aws-ec2" {
     vpc_security_group_ids = [aws_security_group.aws-security-group.id]
     tags = {
         Name = "${local.resource_name}-ec2"
+        env = upper("dev")
     }
     user_data = <<-EOF
               #!/bin/bash
