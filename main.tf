@@ -75,7 +75,8 @@ resource "aws_security_group" "aws-security-group" {
 
 resource "aws_network_acl" "aws-network-acl" {
     vpc_id = aws_vpc.aws-vpc.id
-    subnet_ids = [aws_subnet.aws-subnet.id]
+    count = var.environment == "dev" ? 3:1
+    subnet_ids = [aws_subnet.aws-subnet[count.index].id]
     ingress {
         protocol = -1
         rule_no = 100
