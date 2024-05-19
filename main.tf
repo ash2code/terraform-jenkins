@@ -124,21 +124,3 @@ resource "aws_s3_bucket" "aws-s3-bucket" {
         Name = "${local.resource_name}-s3-bucket"
     }
 }
-
-resource "aws_s3_account_public_access_block" "aws-s3-pub-access" {
-
-    bucket = aws_s3_bucket.aws-s3-bucket.id
-
-    block_public_acls = true
-    block_public_policy = true
-    ignore_public_acls = true
-    restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_ownership_controls" "aws-object-ownership" {
-    bucket = aws_s3_bucket.aws-s3-bucket.id
-
-    rule {
-        object_ownership = "ObjectWriter"
-    }
-}
