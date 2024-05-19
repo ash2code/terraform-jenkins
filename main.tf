@@ -106,7 +106,7 @@ resource "aws_instance" "aws-ec2" {
     vpc_security_group_ids = [aws_security_group.aws-security-group.id]
     tags = {
         Name = "${local.resource_name}-ec2-${count.index + 1}"
-        env = upper("dev")
+        env = upper(var.environment)
     }
     user_data = <<-EOF
               #!/bin/bash
