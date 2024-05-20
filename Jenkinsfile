@@ -4,13 +4,13 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials("aws-cred")
         AWS_SECRET_ACCESS_KEY = credentials("aws-cred")
-        TERRAFORM_DESTROY = "NO"
+        TERRAFORM_DESTROY = "NO"  // Change this to "YES" to trigger destroy
     }
 
-    stages{
+    stages {
         stage("checkout-code") {
             steps {
-            git branch: 'main', url: 'https://github.com/ash2code/terraform-jenkins.git'
+                git branch: 'main', url: 'https://github.com/ash2code/terraform-jenkins.git'
             }
         }
         stage("terraform init") {
@@ -27,25 +27,25 @@ pipeline {
                 }
             }
         }
-        stage("terraform-apply") {
+        stage("terraform apply") {
+            when {
+                expression { return env.TERRAFORM_DESTROY != 'YES' }
+            }
             steps {
                 script {
                     sh "terraform apply --auto-approve -input=false"
                 }
             }
         }
-        stage("terraform-destroy") {
+        stage("terraform destroy") {
+            when {
+                expression { return env.TERRAFORM_DESTROY == 'YES' }
+            }
             steps {
                 script {
-                    if (env.TERRAFORM_DESTROY == 'NO') {
-                        sh "terraform destroy -input=false --auto-approve"
-                    }
-                    else {
-                        echo "terraform is not destroyed"
-                    }
+                    sh "terraform destroy -input=false --auto-approve"
                 }
             }
         }
     }
 }
-        
