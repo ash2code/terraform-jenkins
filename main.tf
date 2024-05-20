@@ -23,7 +23,7 @@ resource "aws_subnet" "aws-subnet" {
     count = var.environment == "dev" ? 3:1
     cidr_block = element(local.subnet_cidr_blocks,count.index)
     map_public_ip_on_launch = true
-    availability_zone = var.availability_zone
+    availability_zone = element(var.az_list,count.index)
     tags = {
         Name = "${local.resource_name}-subnet-${count.index + 1}"
     }
