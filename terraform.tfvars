@@ -1,6 +1,6 @@
 vpc_cidr_block = "10.0.0.0/16"
 public_subnet_cidr_list = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.3.0/24"]
-availability_zone = "us-east-1a"
+az_list = ["us-east-1a","us-east-1b","us-east-1c"]
 allowed_ssh_cidr_blocks = ["0.0.0.0/0"]
 egress_cidr_blocks = ["0.0.0.0/0"]
 ami = "ami-0e001c9271cf7f3b9"

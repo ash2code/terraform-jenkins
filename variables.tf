@@ -1,5 +1,5 @@
 variable "vpc_cidr_block" {}
-variable "availability_zone" {}
+variable "az_list" {}
 variable "allowed_ssh_cidr_blocks" {}
 variable "egress_cidr_blocks" {}
 variable "ami" {} 
