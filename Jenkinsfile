@@ -7,36 +7,19 @@ pipeline {
         TERRAFORM_DESTROY = "YES"  // Change this to "YES" to trigger destroy
     }
 
-    // stages {
-    //     stage("checkout-code") {
-    //         steps {
-    //             git branch: 'main', url: 'https://github.com/ash2code/terraform-jenkins.git'
-    //         }
-    //     }
-    //     stage("terraform init") {
-    //         steps {
-    //             script {
-    //                 sh "terraform init -input=false -force-copy"
-    //             }
-    //         }
-    //     }
-    //     stage("terraform plan") {
-    //         steps {
-    //             script {
-    //                 sh "terraform plan -input=false"
-    //             }
-    //         }
-    //     }
-    //     stage("terraform apply") {
-    //         when {
-    //             expression { return env.TERRAFORM_DESTROY != 'YES' }
-    //         }
-    //         steps {
-    //             script {
-    //                 sh "terraform apply --auto-approve -input=false"
-    //             }
-    //         }
-    //     }
+    stages {
+        stage("checkout-code") {
+            steps {
+                git branch: 'main', url: 'https://github.com/ash2code/terraform-jenkins.git'
+            }
+        }
+        stage("terraform init") {
+            steps {
+                script {
+                    sh "terraform init -input=false -force-copy"
+                }
+            }
+        }
         stage("terraform destroy") {
             when {
                 expression { return env.TERRAFORM_DESTROY == 'YES' }
@@ -48,4 +31,4 @@ pipeline {
             }
         }
     }
-
+}
