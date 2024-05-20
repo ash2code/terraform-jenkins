@@ -21,7 +21,7 @@ resource "aws_internet_gateway" "aws-igw" {
 resource "aws_subnet" "aws-subnet" {
     vpc_id = aws_vpc.aws-vpc.id
     count = var.environment == "dev" ? 3:1
-    cidr_block = element(var.public_subnet_cidr_list,count.index)
+    cidr_block = element(local.subnet_cidr_blocks,count.index)
     map_public_ip_on_launch = true
     availability_zone = var.availability_zone
     tags = {
